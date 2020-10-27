@@ -23,5 +23,6 @@ def count_lines():
     return result
 
 
-print(count_lines() - 28)
+# this code is 29 lines long
+print(count_lines() - 29)
 quit()

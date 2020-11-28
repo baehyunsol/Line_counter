@@ -1,28 +1,43 @@
 import os
 
 
-valid = ['.py']
+valid = ['.py', '.c', '.md', '.rs', '.cpp', '.h', '.json']
 
 
-def count_lines():
+def count_lines_and_chars():
+
+    lines = {}
+    chars = {}
+
+    for v in valid:
+        lines[v] = 0
+        chars[v] = 0
+
     dirs = os.listdir()
-    result = 1
 
     for d in dirs:
 
         if os.path.isdir(d):
             os.chdir(d)
-            result += count_lines()
+            child_lines, child_chars = count_lines_and_chars()
+
+            for v in valid:
+
+                if child_lines[v] > 1:
+                    lines[v] += child_lines[v]
+
+                chars[v] += child_chars[v]
+
             os.chdir('..')
 
         elif os.path.splitext(d)[1] in valid:
-            
+
             with open(d, 'r') as f:
-                result += f.read().count('\n')
+                ff = f.read()
+                lines[os.path.splitext(d)[1]] += ff.count('\n') + 1
+                chars[os.path.splitext(d)[1]] += len(ff)
 
-    return result
+    return lines, chars
 
 
-# this code is 29 lines long
-print(count_lines() - 29)
-quit()
+print(count_lines_and_chars())
